@@ -1,31 +1,37 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
+const path = require("path");
+const { app, globalShortcut, BrowserWindow } = require("electron");
+const { autoUpdater } = require("electron-updater");
+const isDev = require("electron-is-dev");
+const fs = require('fs');
+let GlobalWindow = '';
+let GlobalEnv= '';
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-  // eslint-disable-line global-require
-  app.quit();
-}
+GlobalEnv = JSON.parse(fs.readFileSync('C:/Users/YUNOJ1900/Desktop/.env', 'utf8'));
 
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    //kiosk: true,
-    show: true
-  });
-
-
-  setTimeout(function() {
-    //mainWindow.setKiosk(true);
-  }, 100);
+  const mainWindow = new BrowserWindow(GlobalEnv.kiosk_params);
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
+  mainWindow.webContents.executeJavaScript(`
+  document.getElementById("iframe").setAttribute('src', '${GlobalEnv.iframe.url}')
+`);
+
+  //register esc key to toggle kiosk mode for use with teamviewer
+  globalShortcut.register('Escape', () => {
+    return mainWindow.isKiosk() 
+        ? mainWindow.setKiosk(false) 
+        : (mainWindow.setKiosk(true),
+        setTimeout(() => {
+          mainWindow.reload()
+        }, 200));
+  });
+  
+  GlobalWindow = mainWindow;
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -50,5 +56,14 @@ app.on('activate', () => {
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+// Electron autoupdater check for updates and then quit and install
+// when downloaded in background
+setInterval(() => {
+  autoUpdater.checkForUpdates();
+}, 60000);
+
+autoUpdater.on("update-downloaded", () => {
+  setTimeout(() => {
+    autoUpdater.quitAndInstall()
+  }, 500)
+});

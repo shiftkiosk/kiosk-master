@@ -1,15 +1,32 @@
 {
-  "name": "kiosk",
-  "productName": "kiosk",
-  "version": "1.0.0",
+  "name": "kiosk-master",
+  "productName": "kiosk-master",
+  "version": "1.5.5",
   "description": "Electron Wrapper for Kiosk",
   "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shiftkiosk/kiosk-master"
+  },
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "publish": "electron-forge publish",
+    "publish": "electron-builder --win --publish always",
     "lint": "echo \"No linting configured\""
+  },
+  "build": {
+    "appId": "com.kiosk.master",
+    "productName": "kiosk-master",
+    "directories": {
+      "output": "electron-build",
+      "buildResources": "build-assets"
+    },
+    "win": {
+      "publish": [
+        "github"
+      ]
+    }
   },
   "keywords": [],
   "author": "brentfrench",
@@ -42,7 +59,12 @@
     }
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "@electron/remote": "^2.0.8",
+    "electron-is-dev": "^2.0.0",
+    "electron-localshortcut": "^3.2.1",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-updater": "^5.0.1",
+    "electron-webpack": "^2.8.2"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.63",
@@ -50,6 +72,7 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.63",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
     "@electron-forge/maker-zip": "^6.0.0-beta.63",
-    "electron": "18.0.3"
+    "electron": "18.0.3",
+    "electron-builder": "^23.0.3"
   }
 }
