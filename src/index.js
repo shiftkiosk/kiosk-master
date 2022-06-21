@@ -1,7 +1,7 @@
 const path = require("path");
 const { app, globalShortcut, BrowserWindow } = require("electron");
 const { autoUpdater } = require("electron-updater");
-import * as Sentry from "@sentry/electron";
+const Sentry = require("@sentry/electron");
 const isDev = require("electron-is-dev");
 const fs = require('fs');
 let GlobalWindow = '';
