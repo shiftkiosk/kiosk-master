@@ -1,7 +1,7 @@
 {
   "name": "kiosk-master",
   "productName": "kiosk-master",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "Electron Wrapper for Kiosk",
   "main": "src/index.js",
   "repository": {
