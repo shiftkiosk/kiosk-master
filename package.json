@@ -60,6 +60,7 @@
   },
   "dependencies": {
     "@electron/remote": "^2.0.8",
+    "@sentry/electron": "^3.0.7",
     "electron-is-dev": "^2.0.0",
     "electron-localshortcut": "^3.2.1",
     "electron-squirrel-startup": "^1.0.0",

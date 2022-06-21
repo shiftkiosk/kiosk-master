@@ -1,10 +1,13 @@
 const path = require("path");
 const { app, globalShortcut, BrowserWindow } = require("electron");
 const { autoUpdater } = require("electron-updater");
+import * as Sentry from "@sentry/electron";
 const isDev = require("electron-is-dev");
 const fs = require('fs');
 let GlobalWindow = '';
 let GlobalEnv= '';
+
+Sentry.init({ dsn: "https://200d2a04e2034aefae2280893a4e3553@o245675.ingest.sentry.io/6518084" });
 
 GlobalEnv = JSON.parse(fs.readFileSync('C:/Users/YUNOJ1900/Desktop/.env', 'utf8'));
 
@@ -25,7 +28,6 @@ const createWindow = () => {
         ? mainWindow.setKiosk(false) 
         : (mainWindow.setKiosk(true),
         setTimeout(() => {
-          // mainWindow.reload()
           mainWindow.webContents.executeJavaScript(`
             document.getElementById("iframe").setAttribute('src', '${GlobalEnv.iframe.url}')
           `);
@@ -41,6 +43,8 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
+
+app.on('ready', myUndefinedFunction());
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
