@@ -23,10 +23,13 @@ const createWindow = () => {
   globalShortcut.register('Escape', () => {
     return mainWindow.isKiosk() 
         ? mainWindow.setKiosk(false) 
-        : (mainWindow.setKiosk(true),
-        setTimeout(() => {
-          mainWindow.reload()
-        }, 200));
+        : mainWindow.setKiosk(true)
+        // setTimeout(() => {
+        //   mainWindow.reload()
+        //   mainWindow.webContents.executeJavaScript(`
+        //     document.getElementById("iframe").setAttribute('src', '${GlobalEnv.iframe.url}')
+        //   `);
+        // }, 300));
   });
   
   GlobalWindow = mainWindow;
