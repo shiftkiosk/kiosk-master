@@ -6,6 +6,8 @@ const isDev = require("electron-is-dev");
 const fs = require('fs');
 let GlobalWindow = '';
 let GlobalEnv= '';
+let interval;
+let isReset = false;
 
 Sentry.init({ dsn: "https://200d2a04e2034aefae2280893a4e3553@o245675.ingest.sentry.io/6518084" });
 
@@ -21,6 +23,40 @@ const createWindow = () => {
   mainWindow.webContents.executeJavaScript(`
   document.getElementById("iframe").setAttribute('src', '${GlobalEnv.iframe.url}')
 `);
+
+mainWindow.webContents.addListener("did-start-navigation", () => {   
+  if (interval && isReset) {
+    isReset = false;
+    clearInterval(interval);
+    reload();
+  }
+})
+
+const reload = () => {
+  setTimeout(() => {
+    console.log('blocked code execute');
+    isReset = true;
+    
+      interval = setInterval(() => {
+      mainWindow.webContents.mainFrame.frames.forEach(frame => {
+        const url = new URL(frame.url)
+        if (url.host === 'homebase-kiosk.shift.delivery') {
+          let execute = frame.executeJavaScript('document.getElementById("main-content-container");').then(
+            response => {
+              if(response === null) {
+                console.log('relaunch app code execute');
+                clearInterval(interval);
+                app.relaunch()
+                app.exit()
+              }
+            }
+          )
+        }
+      })
+    }, 30000)
+  }, 60000)}
+  
+reload();
 
   //register esc key to toggle kiosk mode for use with teamviewer
   globalShortcut.register('Escape', () => {
@@ -65,7 +101,7 @@ app.on('activate', () => {
 // when downloaded in background
 setInterval(() => {
   autoUpdater.checkForUpdates();
-}, 60000);
+}, 3600000);
 
 autoUpdater.on("update-downloaded", () => {
   setTimeout(() => {
