@@ -1,7 +1,7 @@
 {
   "name": "kiosk-master",
   "productName": "kiosk-master",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "description": "Electron Wrapper for Kiosk",
   "main": "src/index.js",
   "repository": {
@@ -61,6 +61,7 @@
   "dependencies": {
     "@electron/remote": "^2.0.8",
     "@sentry/electron": "^3.0.7",
+    "axios": "^0.27.2",
     "electron-is-dev": "^2.0.0",
     "electron-localshortcut": "^3.2.1",
     "electron-squirrel-startup": "^1.0.0",
